@@ -401,7 +401,7 @@
 			"begin": "([[:alnum:]]*)\\s*(?:(:)|\\b(as))",
 			"beginCaptures": {
 				"1": {
-					"name": "support.variable.baal",
+					"name": "support.function.baal",
 					"patterns": [{
 						"include": "#identifier"
 					}, {
