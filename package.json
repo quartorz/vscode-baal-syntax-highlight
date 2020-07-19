@@ -1,0 +1,33 @@
+{
+    "name": "baal-syntax-highlight",
+    "displayName": "baal syntax highlight",
+    "description": "baal syntax highlight",
+    "version": "0.0.1",
+    "publisher": "quarter",
+    "engines": {
+        "vscode": "^1.47.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "baal",
+            "aliases": ["baal", "baal"],
+            "extensions": [".faced"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "baal",
+            "scopeName": "source.baal",
+            "path": "./syntaxes/baal.tmLanguage.json",
+            "tokenTypes": {
+                "entity.name.namespace.baal": "other"
+            }
+        }]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/quartorz/vscode-baal-syntax-highlight.git"
+    }
+}

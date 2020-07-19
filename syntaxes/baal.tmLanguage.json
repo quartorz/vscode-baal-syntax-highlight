@@ -1,0 +1,502 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "baal",
+	"foldingStartMarker": "\\{[ \\t]*$",
+	"foldingStopMarker": "^[ \\t]*\\}",
+	"patterns": [
+		{
+			"include": "#document"
+		},
+		{
+			"include": "#comment"
+		}
+	],
+	"repository": {
+		"document": {
+			"patterns": [{
+				"include": "#namespace"
+			}]
+		},
+		"namespace": {
+			"begin": "\\b(namespace)(?<=\\b[.[:alnum:]]+|[ \\t]*/[/*])",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type"
+				}
+			},
+			"end": "(?<=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#namespace-without-keyword"
+			}],
+			"name": "meta.namespace"
+		},
+		"namespace-without-keyword": {
+			"begin": "\\b([.[:alnum:]]+)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.type.namespace.baal",
+					"patterns": [{
+						"include": "#qualified-name"
+					}, {
+						"include": "#invalid-name"
+					}]
+				}
+			},
+			"end": "(?<=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#import-clause"
+			}, {
+				"include": "#import-body"
+			}]
+		},
+		"import-clause":{
+			"begin": "(\\bimport\\b|[ \\t]*\\+=)",
+			"end": "(?={)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.import.baal"
+				}
+			},
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#import-clause-target-name"
+			}]
+		},
+		"import-clause-target-name": {
+			"begin": "(\\b[.\\*[:alnum:]]+)",
+			"end": "(?={)",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.type.import.baal",
+					"patterns": [{
+						"include": "#qualified-name-with-wildcard"
+					}, {
+						"include": "#invalid-name"
+					}]
+				}
+			},
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#import-clause"
+			}]
+		},
+		"import-body": {
+			"begin": "{",
+			"end": "}",
+			"patterns": [{
+				"include": "#declarations"
+			}]
+		},
+		"declarations":{
+			"begin": "(?<={)",
+			"end": "(?=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#doc-comment"
+			}, {
+				"include": "#abstract-entity"
+			}, {
+				"include": "#entity"
+			}, {
+				"include": "#service"
+			}]
+		},
+		"abstract-entity": {
+			"begin": "\\b(abstract)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.modifier.baal"
+				}
+			},
+			"end": "(?=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#entity"
+			}]
+		},
+		"entity": {
+			"begin": "\\b(entity)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.baal"
+				}
+			},
+			"end": "(?<=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#entity-without-keyword"
+			}],
+			"name": "meta.entity.baal"
+		},
+		"entity-without-keyword": {
+			"comment": "entityの定義(entity Entity ...)の、「entitiy」を除いた部分",
+			"begin": "\\b([[:alnum:]]+)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.type.namespace.baal",
+					"patterns": [{
+						"include": "#identifier"
+					}, {
+						"include": "#invalid-name"
+					}]
+				}
+			},
+			"end": "(?<=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#include-clause"
+			}, {
+				"include": "#entity-body"
+			}]
+		},
+		"include-clause": {
+			"begin": "(\\bincludes\\b|[ \\t]*\\+=)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.includes.baal"
+				}
+			},
+			"end": "(?={)",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#entity"
+			}, {
+				"include": "#include-clause-target-name"
+			}, {
+				"include": "#doc-comment"
+			}, {
+				"include": "#include-clause"
+			}]
+		},
+		"include-clause-target-name": {
+			"begin": "([[:upper:]][.*[:alnum:]]*)",
+			"end": "(?={)",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.type.include.baal",
+					"patterns": [{
+						"include": "#qualified-name"
+					}, {
+						"include": "#invalid-name"
+					}]
+				}
+			},
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#include-clause"
+			}]
+		},
+		"entity-body": {
+			"begin": "{",
+			"end": "}",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#doc-comment"
+			}, {
+				"include": "#field-definition"
+			}],
+			"name": "meta.entity.body.baal"
+		},
+		"field-definition": {
+			"begin": "([[:alnum:]]*)\\s*(?:(:)|\\b(as))",
+			"beginCaptures": {
+				"1": {
+					"name": "support.variable.baal",
+					"patterns": [{
+						"include": "#identifier"
+					}, {
+						"include": "#invalid-name"
+					}]
+				},
+				"2": {
+					"name": "keyword.other.as"
+				},
+				"3": {
+					"name": "keyword.other.as"
+				}
+			},
+			"end": ";",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.terminator.field.baal"
+				}
+			},
+			"name": "meta.definition.field.baal",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#modifiered-type"
+			}]
+		},
+		"modifiered-type": {
+			"begin": "(\\?|!|\\brequired(?=\\b)|\\bnullable(?=\\b))",
+			"beginCaptures": {
+				"1": {
+					"patterns": [{
+						"include": "#required"
+					}, {
+						"include": "#nullable"
+					}]
+				}
+			},
+			"end": "(?=\\<|=|;)",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#iteration-and-type"
+			}, {
+				"include": "#iteration-by-word-and-type"
+			}, {
+				"include": "#type"
+			}]
+		},
+		"required": {
+			"match": "(!|required)",
+			"name": "storage.modifier.required.baal"
+		},
+		"nullable": {
+			"match": "(\\?|nullable)",
+			"name": "storage.modifier.nullable.baal"
+		},
+		"iteration-and-type": {
+			"begin": "\\s*(@|%)",
+			"beginCaptures": {
+				"1": {
+					"patterns": [{
+						"match": "@",
+						"name": "storage.type.list-of.baal"
+					}, {
+						"match": "%",
+						"name": "storage.type.dictionary-of.baal"
+					}]
+				}
+			},
+			"end": "(?=\\<|=|;)",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#iteration-and-type"
+			}, {
+				"include": "#iteration-by-word-and-type"
+			}, {
+				"include": "#type"
+			}]
+		},
+		"iteration-by-word-and-type": {
+			"comment": "\"list of\"とか\"dictionary of\"の\"list\", \"dictionary\"の部分",
+			"begin": "\\b(list|dictionary|hash|map)",
+			"beginCaptures": {
+				"1": {
+					"patterns": [{
+						"match": "list",
+						"name": "storage.type.list-of.baal"
+					}, {
+						"match": "dictionary|hash|map",
+						"name": "storage.type.dictionary-of.baal"
+					}]
+				}
+			},
+			"end": "(?=\\<|=|;)",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#iteration-by-word-and-type.of"
+			}]
+		},
+		"iteration-by-word-and-type.of": {
+			"comment": "\"list of\"とか\"dictionary of\"の\"of\"の部分",
+			"begin": "(\\s*)(of)(?=\\b)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.iteration.baal"
+				},
+				"2": {
+					"name": "storage.type.list-or-dictionary-of"
+				}
+			},
+			"end": "(?=\\<|=|;)",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#iteration-and-type"
+			}, {
+				"include": "#iteration-by-word-and-type"
+			}, {
+				"include": "#type"
+			}]
+		},
+		"type": {
+			"begin": "",
+			"end": "(?=\\<|=|;)",
+			"name": "support.type.baal",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#strings"
+			}, {
+				"include": "#entity"
+			}]
+		},
+		"service": {
+			"begin": "\\b(service)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.baal"
+				}
+			},
+			"end": "(?<=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#service-without-keyword"
+			}],
+			"name": "meta.service.baal"
+		},
+		"service-without-keyword": {
+			"comment": "serviceの定義(service ServiceXXX ...)の、「service」を除いた部分",
+			"begin": "\\b([[:alnum:]]+)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.type.service.baal",
+					"patterns": [{
+						"include": "#identifier"
+					}, {
+						"include": "#invalid-name"
+					}]
+				}
+			},
+			"end": "(?<=})",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#service-body"
+			}]
+		},
+		"service-body": {
+			"begin": "{",
+			"end": "}",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#doc-comment"
+			}, {
+				"include": "#method-definition"
+			}],
+			"name": "meta.service.body.baal"
+		},
+		"method-definition": {
+			"begin": "([[:alnum:]]*)\\s*(?:(:)|\\b(as))",
+			"beginCaptures": {
+				"1": {
+					"name": "support.variable.baal",
+					"patterns": [{
+						"include": "#identifier"
+					}, {
+						"include": "#invalid-name"
+					}]
+				},
+				"2": {
+					"name": "keyword.other.as"
+				},
+				"3": {
+					"name": "keyword.other.as"
+				}
+			},
+			"end": ";",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.terminator.method.baal"
+				}
+			},
+			"name": "meta.definition.method.baal",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#method-request-response"
+			}]
+		},
+		"method-request-response": {
+			"begin": "(\\b(?:request|response)(?=\\b)|\\s*(?:<=|=>))",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.modifier.baal"
+				}
+			},
+			"end": "(?=;)",
+			"patterns": [{
+				"include": "#comment"
+			}, {
+				"include": "#modifiered-type"
+			}, {
+				"include": "#method-request-response"
+			}]
+		},
+		"identifier": {
+			"match": "\\b[[:upper:]][[:alnum:]]*"
+		},
+		"qualified-name": {
+			"match": "\\b([[:upper:]][[:alnum:]]*)(\\.[[:upper:]][[:alnum:]]*)*"
+		},
+		"qualified-name-with-wildcard": {
+			"match": "\\b([[:upper:]][[:alnum:]]*)(\\.[[:upper:]][[:alnum:]]*)*(\\.\\*)?"
+		},
+		"invalid-name": {
+			"match": "\\b[.*[:alnum:]]+",
+			"name": "invalid.illegal.baal"
+		},
+		"strings": {
+			"name": "string.quoted.double.baal",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.baal",
+					"match": "\\\\."
+				}
+			]
+		},
+		"doc-comment": {
+			"name": "comment.block.documentation.baal",
+			"begin": "\\/\\#",
+			"end": "\\#\\/"
+		},
+		"comment": {
+			"patterns": [{
+				"name":"comment.block.baal",
+				"begin": "(^[ \\t]+)?(\\/\\*)",
+				"beginCaptures": {
+					"1": {
+						"name": "punctuation.whitespace.comment.leading.js"
+					}
+				},
+				"end": "\\*\\/"
+			}, {
+				"name": "comment.line.double-slash.baal",
+				"begin": "(^[ \\t]+)?(//)",
+				"beginCaptures": {
+					"1": {
+						"name": "punctuation.whitespace.comment.leading.baal"
+					},
+					"2": {
+						"name": "punctuation.definition.comment.baal"
+					}
+				},
+				"end": "(?=^)"
+			}]
+		}
+	},
+	"scopeName": "source.baal"
+}
