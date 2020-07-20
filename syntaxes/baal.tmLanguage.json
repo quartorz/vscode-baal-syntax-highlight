@@ -6,14 +6,13 @@
 	"patterns": [
 		{
 			"include": "#document"
-		},
-		{
-			"include": "#comment"
 		}
 	],
 	"repository": {
 		"document": {
 			"patterns": [{
+				"include": "#comment"
+			}, {
 				"include": "#namespace"
 			}]
 		},
@@ -30,7 +29,7 @@
 			}, {
 				"include": "#namespace-without-keyword"
 			}],
-			"name": "meta.namespace"
+			"name": "meta.namespace.baal"
 		},
 		"namespace-without-keyword": {
 			"begin": "\\b([.[:alnum:]]+)\\b",
@@ -115,7 +114,7 @@
 					"name": "storage.modifier.baal"
 				}
 			},
-			"end": "(?=})",
+			"end": "(?<=})",
 			"patterns": [{
 				"include": "#comment"
 			}, {
@@ -409,10 +408,10 @@
 					}]
 				},
 				"2": {
-					"name": "keyword.other.as"
+					"name": "keyword.other.as.baal"
 				},
 				"3": {
-					"name": "keyword.other.as"
+					"name": "keyword.other.as.baal"
 				}
 			},
 			"end": ";",
