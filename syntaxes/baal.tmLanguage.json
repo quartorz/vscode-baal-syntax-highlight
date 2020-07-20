@@ -251,7 +251,7 @@
 					}]
 				}
 			},
-			"end": "(?=\\<|=|;)",
+			"end": "(?=\\<|=|accepts|returns|;)",
 			"patterns": [{
 				"include": "#comment"
 			}, {
@@ -283,7 +283,7 @@
 					}]
 				}
 			},
-			"end": "(?=\\<|=|;)",
+			"end": "(?=\\<|=|accepts|returns|;)",
 			"patterns": [{
 				"include": "#comment"
 			}, {
@@ -308,7 +308,7 @@
 					}]
 				}
 			},
-			"end": "(?=\\<|=|;)",
+			"end": "(?=\\<|=|accepts|returns|;)",
 			"patterns": [{
 				"include": "#comment"
 			}, {
@@ -326,7 +326,7 @@
 					"name": "storage.type.list-or-dictionary-of"
 				}
 			},
-			"end": "(?=\\<|=|;)",
+			"end": "(?=\\<|=|accepts|returns|;)",
 			"patterns": [{
 				"include": "#comment"
 			}, {
@@ -339,7 +339,7 @@
 		},
 		"type": {
 			"begin": "",
-			"end": "(?=\\<|=|;)",
+			"end": "(?=\\<|=|accepts|returns|;)",
 			"name": "support.type.baal",
 			"patterns": [{
 				"include": "#comment"
@@ -428,7 +428,7 @@
 			}]
 		},
 		"method-request-response": {
-			"begin": "(\\b(?:request|response)(?=\\b)|\\s*(?:<=|=>))",
+			"begin": "(\\b(?:accepts|returns)(?=\\b)|\\s*(?:<=|=>))",
 			"beginCaptures": {
 				"1": {
 					"name": "storage.modifier.baal"
