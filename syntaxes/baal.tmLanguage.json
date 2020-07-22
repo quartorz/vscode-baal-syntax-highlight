@@ -27,30 +27,27 @@
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#namespace-without-keyword"
+				"begin": "\\b([.[:alnum:]]+)\\b",
+				"beginCaptures": {
+					"1": {
+						"name": "entity.name.type.namespace.baal",
+						"patterns": [{
+							"include": "#qualified-name"
+						}, {
+							"include": "#invalid-name"
+						}]
+					}
+				},
+				"end": "(?<=})",
+				"patterns": [{
+					"include": "#comment"
+				}, {
+					"include": "#import-clause"
+				}, {
+					"include": "#import-body"
+				}]
 			}],
 			"name": "meta.namespace.baal"
-		},
-		"namespace-without-keyword": {
-			"begin": "\\b([.[:alnum:]]+)\\b",
-			"beginCaptures": {
-				"1": {
-					"name": "entity.name.type.namespace.baal",
-					"patterns": [{
-						"include": "#qualified-name"
-					}, {
-						"include": "#invalid-name"
-					}]
-				}
-			},
-			"end": "(?<=})",
-			"patterns": [{
-				"include": "#comment"
-			}, {
-				"include": "#import-clause"
-			}, {
-				"include": "#import-body"
-			}]
 		},
 		"import-clause":{
 			"begin": "(\\bimport\\b|[ \\t]*\\+=)",
@@ -63,26 +60,23 @@
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#import-clause-target-name"
-			}]
-		},
-		"import-clause-target-name": {
-			"begin": "(\\b[.\\*[:alnum:]]+)",
-			"end": "(?={)",
-			"beginCaptures": {
-				"1": {
-					"name": "entity.name.type.import.baal",
-					"patterns": [{
-						"include": "#qualified-name-with-wildcard"
-					}, {
-						"include": "#invalid-name"
-					}]
-				}
-			},
-			"patterns": [{
-				"include": "#comment"
-			}, {
-				"include": "#import-clause"
+				"begin": "(\\b[.\\*[:alnum:]]+)",
+				"end": "(?={)",
+				"beginCaptures": {
+					"1": {
+						"name": "entity.name.type.import.baal",
+						"patterns": [{
+							"include": "#qualified-name-with-wildcard"
+						}, {
+							"include": "#invalid-name"
+						}]
+					}
+				},
+				"patterns": [{
+					"include": "#comment"
+				}, {
+					"include": "#import-clause"
+				}]
 			}]
 		},
 		"import-body": {
@@ -132,31 +126,28 @@
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#entity-without-keyword"
+				"comment": "entityの定義(entity Entity ...)の、「entitiy」を除いた部分",
+				"begin": "\\b([[:alnum:]]+)\\b",
+				"beginCaptures": {
+					"1": {
+						"name": "entity.name.type.namespace.baal",
+						"patterns": [{
+							"include": "#identifier"
+						}, {
+							"include": "#invalid-name"
+						}]
+					}
+				},
+				"end": "(?<=})",
+				"patterns": [{
+					"include": "#comment"
+				}, {
+					"include": "#include-clause"
+				}, {
+					"include": "#entity-body"
+				}]
 			}],
 			"name": "meta.entity.baal"
-		},
-		"entity-without-keyword": {
-			"comment": "entityの定義(entity Entity ...)の、「entitiy」を除いた部分",
-			"begin": "\\b([[:alnum:]]+)\\b",
-			"beginCaptures": {
-				"1": {
-					"name": "entity.name.type.namespace.baal",
-					"patterns": [{
-						"include": "#identifier"
-					}, {
-						"include": "#invalid-name"
-					}]
-				}
-			},
-			"end": "(?<=})",
-			"patterns": [{
-				"include": "#comment"
-			}, {
-				"include": "#include-clause"
-			}, {
-				"include": "#entity-body"
-			}]
 		},
 		"include-clause": {
 			"begin": "(\\bincludes\\b|[ \\t]*\\+=)",
@@ -171,28 +162,25 @@
 			}, {
 				"include": "#entity"
 			}, {
-				"include": "#include-clause-target-name"
+				"begin": "([[:upper:]][.*[:alnum:]]*)",
+				"end": "(?={)",
+				"beginCaptures": {
+					"1": {
+						"name": "entity.name.type.include.baal",
+						"patterns": [{
+							"include": "#qualified-name"
+						}, {
+							"include": "#invalid-name"
+						}]
+					}
+				},
+				"patterns": [{
+					"include": "#comment"
+				}, {
+					"include": "#include-clause"
+				}]
 			}, {
 				"include": "#doc-comment"
-			}, {
-				"include": "#include-clause"
-			}]
-		},
-		"include-clause-target-name": {
-			"begin": "([[:upper:]][.*[:alnum:]]*)",
-			"end": "(?={)",
-			"beginCaptures": {
-				"1": {
-					"name": "entity.name.type.include.baal",
-					"patterns": [{
-						"include": "#qualified-name"
-					}, {
-						"include": "#invalid-name"
-					}]
-				}
-			},
-			"patterns": [{
-				"include": "#comment"
 			}, {
 				"include": "#include-clause"
 			}]
@@ -312,29 +300,26 @@
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#iteration-by-word-and-type.of"
-			}]
-		},
-		"iteration-by-word-and-type.of": {
-			"comment": "\"list of\"とか\"dictionary of\"の\"of\"の部分",
-			"begin": "(\\s*)(of)(?=\\b)",
-			"beginCaptures": {
-				"1": {
-					"name": "punctuation.iteration.baal"
+				"comment": "\"list of\"とか\"dictionary of\"の\"of\"の部分",
+				"begin": "(\\s*)(of)(?=\\b)",
+				"beginCaptures": {
+					"1": {
+						"name": "punctuation.iteration.baal"
+					},
+					"2": {
+						"name": "storage.type.list-or-dictionary-of.baal"
+					}
 				},
-				"2": {
-					"name": "storage.type.list-or-dictionary-of"
-				}
-			},
-			"end": "(?=\\<|=|accepts|returns|;)",
-			"patterns": [{
-				"include": "#comment"
-			}, {
-				"include": "#iteration-and-type"
-			}, {
-				"include": "#iteration-by-word-and-type"
-			}, {
-				"include": "#type"
+				"end": "(?=\\<|=|accepts|returns|;)",
+				"patterns": [{
+					"include": "#comment"
+				}, {
+					"include": "#iteration-and-type"
+				}, {
+					"include": "#iteration-by-word-and-type"
+				}, {
+					"include": "#type"
+				}]
 			}]
 		},
 		"type": {
@@ -360,29 +345,26 @@
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#service-without-keyword"
+				"comment": "serviceの定義(service ServiceXXX ...)の、「service」を除いた部分",
+				"begin": "\\b([[:alnum:]]+)\\b",
+				"beginCaptures": {
+					"1": {
+						"name": "entity.name.type.service.baal",
+						"patterns": [{
+							"include": "#identifier"
+						}, {
+							"include": "#invalid-name"
+						}]
+					}
+				},
+				"end": "(?<=})",
+				"patterns": [{
+					"include": "#comment"
+				}, {
+					"include": "#service-body"
+				}]
 			}],
 			"name": "meta.service.baal"
-		},
-		"service-without-keyword": {
-			"comment": "serviceの定義(service ServiceXXX ...)の、「service」を除いた部分",
-			"begin": "\\b([[:alnum:]]+)\\b",
-			"beginCaptures": {
-				"1": {
-					"name": "entity.name.type.service.baal",
-					"patterns": [{
-						"include": "#identifier"
-					}, {
-						"include": "#invalid-name"
-					}]
-				}
-			},
-			"end": "(?<=})",
-			"patterns": [{
-				"include": "#comment"
-			}, {
-				"include": "#service-body"
-			}]
 		},
 		"service-body": {
 			"begin": "{",
