@@ -452,7 +452,11 @@
 		"doc-comment": {
 			"name": "comment.block.documentation.baal",
 			"begin": "\\/\\#",
-			"end": "\\#\\/"
+			"end": "\\#\\/",
+			"patterns": [{
+				"match": "(@[[:alpha:]]+)\\b",
+				"name": "storage.type.class.baal"
+			}]
 		},
 		"comment": {
 			"patterns": [{
