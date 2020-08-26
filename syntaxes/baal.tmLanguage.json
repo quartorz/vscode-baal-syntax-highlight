@@ -456,6 +456,8 @@
 			"patterns": [{
 				"match": "(@[[:alpha:]]+)\\b",
 				"name": "storage.type.class.baal"
+			}, {
+				"include": "text.xml"
 			}]
 		},
 		"comment": {
