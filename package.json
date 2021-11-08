@@ -2,10 +2,13 @@
     "name": "baal-syntax-highlight",
     "displayName": "baal syntax highlight",
     "description": "baal syntax highlight",
-    "version": "0.0.7",
+    "version": "1.0.0",
     "publisher": "quarter",
     "engines": {
         "vscode": "^1.47.0"
+    },
+    "scripts": {
+        "build": "vsce package"
     },
     "categories": [
         "Programming Languages"
