@@ -44,7 +44,11 @@
 				}, {
 					"include": "#import-clause"
 				}, {
-					"include": "#import-body"
+					"begin": "{",
+					"end": "}",
+					"patterns": [{
+						"include": "#declarations"
+					}]
 				}]
 			}],
 			"name": "meta.namespace.baal"
@@ -77,13 +81,6 @@
 				}, {
 					"include": "#import-clause"
 				}]
-			}]
-		},
-		"import-body": {
-			"begin": "{",
-			"end": "}",
-			"patterns": [{
-				"include": "#declarations"
 			}]
 		},
 		"declarations":{
@@ -144,7 +141,16 @@
 				}, {
 					"include": "#include-clause"
 				}, {
-					"include": "#entity-body"
+					"begin": "{",
+					"end": "}",
+					"patterns": [{
+						"include": "#comment"
+					}, {
+						"include": "#doc-comment"
+					}, {
+						"include": "#field-definition"
+					}],
+					"name": "meta.entity.body.baal"
 				}]
 			}],
 			"name": "meta.entity.baal"
@@ -185,20 +191,8 @@
 				"include": "#include-clause"
 			}]
 		},
-		"entity-body": {
-			"begin": "{",
-			"end": "}",
-			"patterns": [{
-				"include": "#comment"
-			}, {
-				"include": "#doc-comment"
-			}, {
-				"include": "#field-definition"
-			}],
-			"name": "meta.entity.body.baal"
-		},
 		"field-definition": {
-			"begin": "([[:alnum:]]*)\\s*(?:(:)|\\b(as))",
+			"begin": "([[:alnum:]]+)\\s*",
 			"beginCaptures": {
 				"1": {
 					"name": "support.variable.baal",
@@ -207,25 +201,31 @@
 					}, {
 						"include": "#invalid-name"
 					}]
-				},
-				"2": {
-					"name": "keyword.other.as"
-				},
-				"3": {
-					"name": "keyword.other.as"
 				}
 			},
-			"end": ";",
-			"endCaptures": {
-				"0": {
-					"name": "punctuation.terminator.field.baal"
-				}
-			},
+			"end": "(?<=;)",
 			"name": "meta.definition.field.baal",
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#modifiered-type"
+				"begin": "(:)|\\b(as)",
+				"beginCaptures": {
+					"1": {
+						"name": "keyword.other.as.baal"
+					},
+					"2": {
+						"name": "keyword.other.as.baal"
+					}
+				},
+				"end": ";",
+				"endCaptures": {
+					"0": {
+						"name": "punctuation.terminator.field.baal"
+					}
+				},
+				"patterns": [{
+					"include": "#modifiered-type"
+				}]
 			}]
 		},
 		"modifiered-type": {
@@ -328,14 +328,17 @@
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#strings"
-			}, {
 				"include": "#entity"
 			}, {
 				"include": "#primitive-type"
 			}, {
 				"include": "#reference-type"
+			}, {
+				"include": "#pseudo-type"
 			}]
+		},
+		"pseudo-type": {
+			"include": "#string"
 		},
 		"primitive-type": {
 			"patterns":[{
@@ -369,11 +372,6 @@
 					}
 				},
 				"end": "(?<=\\))",
-				"endCaptures": {
-					"0": {
-						"name": "storage.type.integer-end.baal"
-					}
-				},
 				"patterns": [{
 					"begin": "(binary|decimal)",
 					"beginCaptures": {
@@ -433,7 +431,7 @@
 			"begin": "\\b(service)\\b",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.type.baal"
+					"name": "storage.type.service.baal"
 				}
 			},
 			"end": "(?<=})",
@@ -456,25 +454,22 @@
 				"patterns": [{
 					"include": "#comment"
 				}, {
-					"include": "#service-body"
+					"begin": "{",
+					"end": "}",
+					"patterns": [{
+						"include": "#comment"
+					}, {
+						"include": "#doc-comment"
+					}, {
+						"include": "#method-definition"
+					}],
+					"name": "meta.service.body.baal"
 				}]
 			}],
 			"name": "meta.service.baal"
 		},
-		"service-body": {
-			"begin": "{",
-			"end": "}",
-			"patterns": [{
-				"include": "#comment"
-			}, {
-				"include": "#doc-comment"
-			}, {
-				"include": "#method-definition"
-			}],
-			"name": "meta.service.body.baal"
-		},
 		"method-definition": {
-			"begin": "([[:alnum:]]*)\\s*(?:(:)|\\b(as))",
+			"begin": "([[:alnum:]]+)\\s*",
 			"beginCaptures": {
 				"1": {
 					"name": "support.function.baal",
@@ -483,32 +478,47 @@
 					}, {
 						"include": "#invalid-name"
 					}]
-				},
-				"2": {
-					"name": "keyword.other.as.baal"
-				},
-				"3": {
-					"name": "keyword.other.as.baal"
 				}
 			},
-			"end": ";",
-			"endCaptures": {
-				"0": {
-					"name": "punctuation.terminator.method.baal"
-				}
-			},
+			"end": "(?<=;)",
 			"name": "meta.definition.method.baal",
 			"patterns": [{
 				"include": "#comment"
 			}, {
-				"include": "#method-request-response"
+				"begin": "(:)|\\b(as)",
+				"beginCaptures": {
+					"1": {
+						"name": "keyword.other.as.baal"
+					},
+					"2": {
+						"name": "keyword.other.as.baal"
+					}
+				},
+				"end": ";",
+				"endCaptures": {
+					"0": {
+						"name": "punctuation.terminator.method.baal"
+					}
+				},
+				"patterns": [{
+					"include": "#method-request-response"
+				}]
 			}]
 		},
 		"method-request-response": {
-			"begin": "(\\b(?:accepts|returns)(?=\\b)|\\s*(?:<=|=>))",
+			"begin": "(?:\\b(?:(accepts)|(returns))(?=\\b)|\\s*(?:(<=)|(=>)))",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.modifier.baal"
+					"name": "storage.modifier.accepts.baal"
+				},
+				"2": {
+					"name": "storage.modifier.returns.baal"
+				},
+				"3": {
+					"name": "storage.modifier.accepts.baal"
+				},
+				"4": {
+					"name": "storage.modifier.returns.baal"
 				}
 			},
 			"end": "(?=;)",
@@ -533,16 +543,20 @@
 			"match": "[.*[:alnum:]]+",
 			"name": "invalid.illegal.baal"
 		},
-		"strings": {
+		"string": {
 			"name": "string.quoted.double.baal",
-			"begin": "\"",
-			"end": "\"",
-			"patterns": [
-				{
-					"name": "constant.character.escape.baal",
-					"match": "\\\\."
+			"match": "\"((?:(?:\\\\(?:b|f|n|r|t|\\\\|'|\"|x|u))|[^\\\\\"])*)\"",
+			"captures": {
+				"1": {
+					"patterns": [{
+						"match": "\\\\(?:b|f|n|r|t|\\\\|'|\"|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})",
+						"name": "constant.character.escape.baal"
+					}, {
+						"match": "\\\\(?:x|u)",
+						"name": "invalid.illegal.constant.character.escape.baal"
+					}]
 				}
-			]
+			}
 		},
 		"doc-comment": {
 			"name": "comment.block.documentation.baal",
